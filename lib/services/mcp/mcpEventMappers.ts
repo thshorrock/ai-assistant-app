@@ -3,6 +3,7 @@ import { McpPendingToolCall } from '@/types/mcp';
 import { AssembledToolCall } from './openaiToolCallAccumulator';
 
 import {
+  type UiResourceRef,
   emitConsentOutcome,
   emitConsentRequest,
   emitToolCallRecord,
@@ -43,7 +44,7 @@ export function toolResultToRecordMarker(
   call: McpPendingToolCall,
   serverLabel: string,
   result:
-    | { text: string; isError: boolean }
+    | { text: string; isError: boolean; uiResources?: UiResourceRef[] }
     | { errorMessage: string; errorKind?: 'auth' },
   durationMs: number,
 ): string {
@@ -59,6 +60,11 @@ export function toolResultToRecordMarker(
     error: 'errorMessage' in result ? result.errorMessage : null,
     ...('errorMessage' in result && result.errorKind
       ? { error_kind: result.errorKind }
+      : {}),
+    // MCP-UI resources render even when isError is set — a tool may return
+    // an explanatory UI alongside an error flag.
+    ...(!('errorMessage' in result) && result.uiResources?.length
+      ? { ui_resources: result.uiResources }
       : {}),
     duration_ms: durationMs,
     approval_request_id: call.id,

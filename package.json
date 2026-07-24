@@ -33,6 +33,7 @@
     "@ffmpeg/ffmpeg": "^0.12.10",
     "@ffmpeg/util": "^0.12.1",
     "@launchdarkly/node-server-sdk": "^9.7.0",
+    "@mcp-ui/client": "^5.17.3",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@monaco-editor/react": "^4.7.0",
     "@mozilla/readability": "^0.6.0",

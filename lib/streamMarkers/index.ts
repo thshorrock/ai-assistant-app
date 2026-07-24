@@ -85,6 +85,28 @@ export interface ToolCallRecordPayload {
    * the existing file route serves. Additive; other tool records lack it.
    */
   generated_files?: GeneratedFileRef[];
+  /**
+   * MCP-UI resources (https://mcpui.dev) the tool embedded in its result —
+   * content blocks of type 'resource' whose uri starts with ui://. The
+   * client renders each in a sandboxed iframe via @mcp-ui/client instead of
+   * (not in addition to) showing them as text; the flattened `output` above
+   * only ever carries their `[resource content]` placeholder. Additive;
+   * records from non-UI tools lack it.
+   */
+  ui_resources?: UiResourceRef[];
+}
+
+/**
+ * One MCP-UI resource attached to a tool-call record: the embedded-resource
+ * payload as the MCP server sent it, already size-capped server-side.
+ * Exactly one of text/blob is set (blob = base64), per the MCP resource
+ * contract.
+ */
+export interface UiResourceRef {
+  uri: string;
+  mimeType: string;
+  text?: string;
+  blob?: string;
 }
 
 /**

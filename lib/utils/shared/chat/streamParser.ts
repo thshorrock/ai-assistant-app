@@ -507,6 +507,7 @@ export class StreamParser {
       duration_ms: r.duration_ms,
       approval_request_id: r.approval_request_id,
       ...(r.generated_files ? { generated_files: r.generated_files } : {}),
+      ...(r.ui_resources ? { ui_resources: r.ui_resources } : {}),
     }));
   }
 }

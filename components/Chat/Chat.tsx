@@ -34,6 +34,10 @@ import { ConfirmDialog } from '@/components/UI/ConfirmDialog';
 import { ChatError } from './ChatError';
 import { ChatInput } from './ChatInput';
 import { ChatMessages } from './ChatMessages';
+import {
+  MCP_UI_PROMPT_EVENT,
+  type McpUiPromptEventDetail,
+} from './ChatMessages/McpUiResourcePanel';
 import { ChatTopbar } from './ChatTopbar';
 import { EmptyState } from './EmptyState/EmptyState';
 import { SuggestedPrompts } from './EmptyState/SuggestedPrompts';
@@ -399,6 +403,23 @@ export function Chat({
     updateConversation,
     sendMessage,
   });
+
+  // MCP-UI iframes (McpUiResourcePanel) surface 'prompt'/'tool' actions as a
+  // document event because they render far below this component; sending
+  // them as user messages here keeps the tool loop (and its consent flow)
+  // as the only path that ever executes tools.
+  useEffect(() => {
+    const handleMcpUiPrompt = (event: Event) => {
+      const prompt = (event as CustomEvent<McpUiPromptEventDetail>).detail
+        ?.prompt;
+      if (typeof prompt === 'string' && prompt.trim()) {
+        handleSelectPrompt(prompt);
+      }
+    };
+    document.addEventListener(MCP_UI_PROMPT_EVENT, handleMcpUiPrompt);
+    return () =>
+      document.removeEventListener(MCP_UI_PROMPT_EVENT, handleMcpUiPrompt);
+  }, [handleSelectPrompt]);
 
   const handleGenerateOrRetry = useCallback(() => {
     const conversationState = useConversationStore.getState();

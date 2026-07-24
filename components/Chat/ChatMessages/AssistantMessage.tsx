@@ -49,6 +49,7 @@ import {
 import { DocumentTranslationContent } from '@/components/Chat/ChatMessages/DocumentTranslationContent';
 import { GeneratedFilesPanel } from '@/components/Chat/ChatMessages/GeneratedFilesPanel';
 import { InterimSearchPanel } from '@/components/Chat/ChatMessages/InterimSearchPanel';
+import { McpUiResourcePanel } from '@/components/Chat/ChatMessages/McpUiResourcePanel';
 import { ThinkingBlock } from '@/components/Chat/ChatMessages/ThinkingBlock';
 import { ToolCallSummary } from '@/components/Chat/ChatMessages/ToolCallSummary';
 import { TranscriptContent } from '@/components/Chat/ChatMessages/TranscriptContent';
@@ -767,6 +768,9 @@ export const AssistantMessage: FC<AssistantMessageProps> = React.memo(
                       prominently on the message — never only inside the
                       collapsed tool strip. */}
                   <GeneratedFilesPanel toolCalls={liveCalls} />
+                  {/* MCP-UI resources (interactive tool UIs) likewise render
+                      on the message, in sandboxed iframes. */}
+                  <McpUiResourcePanel toolCalls={liveCalls} />
                   <ToolCallSummary
                     toolCalls={liveCalls}
                     approvalSources={message?.approvalSources}
