@@ -12,6 +12,24 @@ vi.mock('launchdarkly-react-client-sdk', () => ({
   useFlags: () => mockFlags,
 }));
 
+// This deployment hides the vendor catalog entries (MSF-only surface — see
+// `hidden` in config/mcpCatalog.ts). The tests below exercise generic auth
+// affordances (dual-auth, PAT fallback, own-OAuth-app fallback) through the
+// vendor fixtures, and those flows are entry-agnostic — so unhide everything
+// here. The hidden/visible split itself is pinned by mcpCatalog.test.ts.
+vi.mock('@/config/mcpCatalog', async (importOriginal) => {
+  const mod = await importOriginal<typeof import('@/config/mcpCatalog')>();
+  return {
+    ...mod,
+    MCP_CATALOG: Object.fromEntries(
+      Object.entries(mod.MCP_CATALOG).map(([key, entry]) => [
+        key,
+        { ...entry, hidden: false },
+      ]),
+    ),
+  };
+});
+
 // useMcpTools hits React Query + fetch; the rows only need a tool list.
 vi.mock('@/client/hooks/settings/useMcpTools', () => ({
   useMcpTools: () => ({ tools: [], isLoadingTools: false, toolsError: false }),

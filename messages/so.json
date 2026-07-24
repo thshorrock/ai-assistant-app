@@ -3261,6 +3261,18 @@
       "hootsuiteNest": {
         "name": "Hootsuite Nest",
         "description": "Dib u eeg oo ka jawaab wada sheekaysiga sanduuqa bulshada."
+      },
+      "msfDemo": {
+        "name": "MSF Demo (MCP)",
+        "description": "Demo MCP server for the MSF PoC — ping, whoami and echo tools. Secured with Entra ID."
+      },
+      "msfDemoApp": {
+        "name": "MSF Demo App (MCP-UI)",
+        "description": "Demo MCP server returning interactive MCP-UI cards rendered in chat. Secured with Entra ID."
+      },
+      "msfUnifield": {
+        "name": "MSF Unifield (MCP)",
+        "description": "Browse the Unifield product catalogue — live supply-chain data read through Unifield's Entra-protected API."
       }
     },
     "connect": "Isku xidh",
@@ -3333,7 +3345,8 @@
     "add": "Ku dar",
     "filterLabel": "Shaandhee isku xireyaasha",
     "filterPlaceholder": "Raadi isku xireyaasha",
-    "noMatches": "Isku xire lama helin: “{query}”."
+    "noMatches": "Isku xire lama helin: “{query}”.",
+    "oauthPopupBlocked": "Your browser blocked the sign-in popup. Allow popups for this site and try again."
   },
   "modelSources": {
     "connectButtonShort": "Ku xidh il model",

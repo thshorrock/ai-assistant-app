@@ -3277,6 +3277,18 @@
       "hootsuiteNest": {
         "name": "Hootsuite Nest",
         "description": "소셜 인박스 대화를 검토하고 답변합니다."
+      },
+      "msfDemo": {
+        "name": "MSF Demo (MCP)",
+        "description": "Demo MCP server for the MSF PoC — ping, whoami and echo tools. Secured with Entra ID."
+      },
+      "msfDemoApp": {
+        "name": "MSF Demo App (MCP-UI)",
+        "description": "Demo MCP server returning interactive MCP-UI cards rendered in chat. Secured with Entra ID."
+      },
+      "msfUnifield": {
+        "name": "MSF Unifield (MCP)",
+        "description": "Browse the Unifield product catalogue — live supply-chain data read through Unifield's Entra-protected API."
       }
     },
     "connect": "연결",
@@ -3349,7 +3361,8 @@
     "add": "추가",
     "filterLabel": "커넥터 필터",
     "filterPlaceholder": "커넥터 검색",
-    "noMatches": "“{query}”와(과) 일치하는 커넥터가 없습니다."
+    "noMatches": "“{query}”와(과) 일치하는 커넥터가 없습니다.",
+    "oauthPopupBlocked": "Your browser blocked the sign-in popup. Allow popups for this site and try again."
   },
   "modelSources": {
     "connectButtonShort": "모델 소스 연결",

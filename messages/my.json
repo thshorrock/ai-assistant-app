@@ -3277,6 +3277,18 @@
       "hootsuiteNest": {
         "name": "Hootsuite Nest",
         "description": "ဆိုရှယ် မီဒီယာအဖွဲ့ဝင်စကားပြောဆိုမှုများကို ပြန်သုံးသပ်နှင့် တုံ့ပြန်ရန်။"
+      },
+      "msfDemo": {
+        "name": "MSF Demo (MCP)",
+        "description": "Demo MCP server for the MSF PoC — ping, whoami and echo tools. Secured with Entra ID."
+      },
+      "msfDemoApp": {
+        "name": "MSF Demo App (MCP-UI)",
+        "description": "Demo MCP server returning interactive MCP-UI cards rendered in chat. Secured with Entra ID."
+      },
+      "msfUnifield": {
+        "name": "MSF Unifield (MCP)",
+        "description": "Browse the Unifield product catalogue — live supply-chain data read through Unifield's Entra-protected API."
       }
     },
     "connect": "ချိတ်ဆက်ရန်",
@@ -3349,7 +3361,8 @@
     "add": "ထည့်ပါ",
     "filterLabel": "ချိတ်ဆက်မှုများ စစ်ထုတ်ရန်",
     "filterPlaceholder": "ချိတ်ဆက်မှုများ ရှာရန်",
-    "noMatches": "“{query}” နှင့် ကိုက်ညီသော ချိတ်ဆက်မှု မရှိပါ။"
+    "noMatches": "“{query}” နှင့် ကိုက်ညီသော ချိတ်ဆက်မှု မရှိပါ။",
+    "oauthPopupBlocked": "Your browser blocked the sign-in popup. Allow popups for this site and try again."
   },
   "modelSources": {
     "connectButtonShort": "မော်ဒယ်ရင်းမြစ် ချိတ်ဆက်ရန်",

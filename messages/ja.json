@@ -3277,6 +3277,18 @@
       "hootsuiteNest": {
         "name": "Hootsuite Nest",
         "description": "ソーシャルインボックスの会話を確認・返信できます。"
+      },
+      "msfDemo": {
+        "name": "MSF Demo (MCP)",
+        "description": "Demo MCP server for the MSF PoC — ping, whoami and echo tools. Secured with Entra ID."
+      },
+      "msfDemoApp": {
+        "name": "MSF Demo App (MCP-UI)",
+        "description": "Demo MCP server returning interactive MCP-UI cards rendered in chat. Secured with Entra ID."
+      },
+      "msfUnifield": {
+        "name": "MSF Unifield (MCP)",
+        "description": "Browse the Unifield product catalogue — live supply-chain data read through Unifield's Entra-protected API."
       }
     },
     "connect": "接続",
@@ -3349,7 +3361,8 @@
     "add": "追加",
     "filterLabel": "コネクタを絞り込む",
     "filterPlaceholder": "コネクタを検索",
-    "noMatches": "「{query}」に一致するコネクタはありません。"
+    "noMatches": "「{query}」に一致するコネクタはありません。",
+    "oauthPopupBlocked": "Your browser blocked the sign-in popup. Allow popups for this site and try again."
   },
   "modelSources": {
     "connectButtonShort": "モデルソースを接続",

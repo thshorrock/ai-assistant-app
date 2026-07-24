@@ -155,6 +155,14 @@ const serverEnvSchema = z.object({
   // in the provider's console with redirect URI
   // `${NEXTAUTH_URL}/mcp-oauth-callback`, then set these. The client SECRET
   // never leaves the server — the token proxy injects it.
+  MCP_OAUTH_MSFDEMO_CLIENT_ID: z.string().optional(),
+  MCP_OAUTH_MSFDEMO_CLIENT_SECRET: z.string().optional(),
+  // Where this deployment's own MCP server lives and the API scope its Entra
+  // registration exposes (see config/mcpCatalog.ts). Kept out of source so a
+  // public fork carries no deployment hostnames or tenant identifiers; unset
+  // simply means the MSF connectors are listed but cannot connect.
+  MCP_MSF_BASE_URL: z.string().url().optional(),
+  MCP_MSF_API_SCOPE: z.string().optional(),
   MCP_OAUTH_GITHUB_CLIENT_ID: z.string().optional(),
   MCP_OAUTH_GITHUB_CLIENT_SECRET: z.string().optional(),
   MCP_OAUTH_ASANA_CLIENT_ID: z.string().optional(),

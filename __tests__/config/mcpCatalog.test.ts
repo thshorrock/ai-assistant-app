@@ -7,6 +7,7 @@ import {
   resolveMcpServers,
 } from '@/config/mcpCatalog';
 import enMessages from '@/messages/en.json';
+import { readFileSync } from 'fs';
 import { describe, expect, it, vi } from 'vitest';
 
 const allowAll: ResolveMcpServersOptions = {
@@ -61,6 +62,31 @@ describe('MCP_CATALOG', () => {
     ]) {
       expect(MCP_CATALOG[key].auth.style).toBe('oauth');
     }
+  });
+
+  it('builds the MSF entries from the environment, not from hardcoded hosts', () => {
+    // The deployment's hostname and tenant scope are injected via
+    // MCP_MSF_BASE_URL / MCP_MSF_API_SCOPE (see vitest.setup.node.ts for the
+    // test values) so this public repo carries neither. Guards against a
+    // literal creeping back in.
+    for (const key of ['msfDemo', 'msfDemoApp', 'msfUnifield']) {
+      const entry = MCP_CATALOG[key];
+      expect(entry.url.startsWith(process.env.MCP_MSF_BASE_URL!)).toBe(true);
+      expect(entry.oauthScopes).toEqual([process.env.MCP_MSF_API_SCOPE]);
+    }
+    const source = readFileSync('config/mcpCatalog.ts', 'utf8');
+    expect(source).not.toMatch(/unknotted\.ai/);
+  });
+
+  it('surfaces only the MSF estate connectors; vendor entries stay hidden', () => {
+    // The PoC deployment browses only its own connectors. Vendor entries are
+    // kept in the catalog — hidden — so resolution (and any existing
+    // connection) still works and the module stays aligned with upstream.
+    const visible = Object.values(MCP_CATALOG)
+      .filter((entry) => !entry.hidden)
+      .map((entry) => entry.key)
+      .sort();
+    expect(visible).toEqual(['msfDemo', 'msfDemoApp', 'msfUnifield']);
   });
 
   it('has an en.json name and description for every entry', () => {

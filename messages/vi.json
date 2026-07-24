@@ -3308,6 +3308,18 @@
       "hootsuiteNest": {
         "name": "Hootsuite Nest",
         "description": "Xem lại và phản hồi các cuộc trò chuyện hộp thư xã hội."
+      },
+      "msfDemo": {
+        "name": "MSF Demo (MCP)",
+        "description": "Demo MCP server for the MSF PoC — ping, whoami and echo tools. Secured with Entra ID."
+      },
+      "msfDemoApp": {
+        "name": "MSF Demo App (MCP-UI)",
+        "description": "Demo MCP server returning interactive MCP-UI cards rendered in chat. Secured with Entra ID."
+      },
+      "msfUnifield": {
+        "name": "MSF Unifield (MCP)",
+        "description": "Browse the Unifield product catalogue — live supply-chain data read through Unifield's Entra-protected API."
       }
     },
     "connect": "Kết nối",
@@ -3380,7 +3392,8 @@
     "add": "Thêm",
     "filterLabel": "Bộ lọc kết nối",
     "filterPlaceholder": "Tìm kiếm kết nối",
-    "noMatches": "Không có kết nối nào phù hợp với \"{query}\"."
+    "noMatches": "Không có kết nối nào phù hợp với \"{query}\".",
+    "oauthPopupBlocked": "Your browser blocked the sign-in popup. Allow popups for this site and try again."
   },
   "modelSources": {
     "connectButtonShort": "Kết nối nguồn mô hình",

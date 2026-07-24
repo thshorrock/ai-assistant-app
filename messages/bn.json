@@ -3277,6 +3277,18 @@
       "hootsuiteNest": {
         "name": "Hootsuite Nest",
         "description": "সোশ্যাল ইনবক্স কথোপকথন পর্যালোচনা করুন এবং উত্তর দিন।"
+      },
+      "msfDemo": {
+        "name": "MSF Demo (MCP)",
+        "description": "Demo MCP server for the MSF PoC — ping, whoami and echo tools. Secured with Entra ID."
+      },
+      "msfDemoApp": {
+        "name": "MSF Demo App (MCP-UI)",
+        "description": "Demo MCP server returning interactive MCP-UI cards rendered in chat. Secured with Entra ID."
+      },
+      "msfUnifield": {
+        "name": "MSF Unifield (MCP)",
+        "description": "Browse the Unifield product catalogue — live supply-chain data read through Unifield's Entra-protected API."
       }
     },
     "connect": "সংযোগ করুন",
@@ -3349,7 +3361,8 @@
     "add": "যোগ করুন",
     "filterLabel": "কানেক্টর ফিল্টার করুন",
     "filterPlaceholder": "কানেক্টর খুঁজুন",
-    "noMatches": "“{query}” নামে কোনো কানেক্টর পাওয়া যায়নি।"
+    "noMatches": "“{query}” নামে কোনো কানেক্টর পাওয়া যায়নি।",
+    "oauthPopupBlocked": "Your browser blocked the sign-in popup. Allow popups for this site and try again."
   },
   "modelSources": {
     "connectButtonShort": "মডেল উৎস সংযোগ করুন",

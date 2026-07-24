@@ -60,11 +60,92 @@ export interface McpCatalogEntry {
   tokenPlaceholder?: string;
   nameKey: string;
   descriptionKey: string;
+  /**
+   * Hidden entries are excluded from the settings "Add a connector" browser
+   * but still resolve normally (existing connections keep working and the
+   * entry stays spoof-proof). This MSF PoC deployment surfaces only its own
+   * estate's connectors; the vendor entries are kept — hidden — so the code
+   * and tests stay aligned with upstream.
+   */
+  hidden?: boolean;
 }
 
+/**
+ * Where this deployment's own MCP server lives, and the API scope its Entra
+ * registration exposes. Both come from the environment so no deployment's
+ * hostnames or tenant identifiers sit in source — this repo is a public fork,
+ * and the estate behind these names is private.
+ *
+ * SERVER-SIDE ONLY, deliberately (no NEXT_PUBLIC_): the URL and scope are read
+ * exclusively by server code — resolveMcpServers, /api/mcp/tools and the OAuth
+ * discovery route. The settings UI reads only key/label/auth/token* fields, so
+ * in the browser these resolve to '' and nothing notices. Keeping them
+ * un-inlined means the hostname never reaches the client bundle either.
+ *
+ * The entries themselves stay unconditional even when the vars are unset: the
+ * settings browser is a CLIENT component enumerating MCP_CATALOG, so making
+ * the entries env-conditional would delete them from the UI in every browser.
+ */
+const MSF_MCP_BASE = (process.env.MCP_MSF_BASE_URL ?? '').replace(/\/$/, '');
+/**
+ * Undefined rather than [''] when unset: an empty string would put a malformed
+ * `scope=` on the authorization call, which is worse than omitting it.
+ */
+const MSF_MCP_SCOPES = process.env.MCP_MSF_API_SCOPE
+  ? [process.env.MCP_MSF_API_SCOPE]
+  : undefined;
+
 export const MCP_CATALOG: Record<string, McpCatalogEntry> = {
+  msfDemo: {
+    key: 'msfDemo',
+    label: 'MSF Demo (MCP)',
+    url: `${MSF_MCP_BASE}/demo`,
+    transport: 'streamable-http',
+    // Entra ID protects this server. There is no PAT to paste — the user
+    // authorises against the tenant and the app holds the token.
+    auth: { style: 'oauth' },
+    // Entra does NOT support RFC 7591 dynamic client registration, so a
+    // pre-registered client is mandatory: MCP_OAUTH_MSFDEMO_CLIENT_ID/_SECRET.
+    supportsDynamicRegistration: false,
+    // The API scope exposed by this deployment's MCP server registration.
+    oauthScopes: MSF_MCP_SCOPES,
+    nameKey: 'connectors.catalog.msfDemo.name',
+    descriptionKey: 'connectors.catalog.msfDemo.description',
+  },
+  msfDemoApp: {
+    key: 'msfDemoApp',
+    label: 'MSF Demo App (MCP-UI)',
+    url: `${MSF_MCP_BASE}/demo-app`,
+    transport: 'streamable-http',
+    // Same MCP server and Entra API registration as msfDemo — /demo-app is
+    // just another slug — so it shares the msfDemo OAuth app and scope (see
+    // getStaticOauthClient). Split out as its own connector because its
+    // tools return MCP-UI resources the chat renders as interactive iframes.
+    auth: { style: 'oauth' },
+    supportsDynamicRegistration: false,
+    oauthScopes: MSF_MCP_SCOPES,
+    nameKey: 'connectors.catalog.msfDemoApp.name',
+    descriptionKey: 'connectors.catalog.msfDemoApp.description',
+  },
+  msfUnifield: {
+    key: 'msfUnifield',
+    label: 'MSF Unifield (MCP)',
+    url: `${MSF_MCP_BASE}/unifield`,
+    transport: 'streamable-http',
+    // Same MCP server and Entra API registration as msfDemo — /unifield is
+    // another slug on the same host — so it shares the msfDemo OAuth app and
+    // scope (see getStaticOauthClient). Its tools read the Unifield product
+    // catalogue through Unifield's Entra-protected API (see
+    // unifield/unknotted-extensions/entra-api-architecture.md).
+    auth: { style: 'oauth' },
+    supportsDynamicRegistration: false,
+    oauthScopes: MSF_MCP_SCOPES,
+    nameKey: 'connectors.catalog.msfUnifield.name',
+    descriptionKey: 'connectors.catalog.msfUnifield.description',
+  },
   github: {
     key: 'github',
+    hidden: true,
     label: 'GitHub',
     url: 'https://api.githubcopilot.com/mcp/',
     transport: 'streamable-http',
@@ -88,6 +169,7 @@ export const MCP_CATALOG: Record<string, McpCatalogEntry> = {
   },
   asana: {
     key: 'asana',
+    hidden: true,
     label: 'Asana',
     url: 'https://mcp.asana.com/sse',
     transport: 'sse',
@@ -100,6 +182,7 @@ export const MCP_CATALOG: Record<string, McpCatalogEntry> = {
   },
   tableau: {
     key: 'tableau',
+    hidden: true,
     label: 'Tableau',
     // Single non-templated host with pod-aware routing — works for every
     // Tableau Cloud pod. Tableau SERVER (self-hosted) is NOT covered; those
@@ -116,6 +199,7 @@ export const MCP_CATALOG: Record<string, McpCatalogEntry> = {
   },
   salesforce: {
     key: 'salesforce',
+    hidden: true,
     label: 'Salesforce',
     // Global host; the ORG is resolved from the OAuth token, not the URL.
     // Salesforce publishes several servers under /platform/mcp/v1/<name>;
@@ -133,6 +217,7 @@ export const MCP_CATALOG: Record<string, McpCatalogEntry> = {
   },
   hootsuitePerch: {
     key: 'hootsuitePerch',
+    hidden: true,
     label: 'Hootsuite Perch',
     // Content creation & publishing. https://www.hootsuite.com/integrations/mcp
     url: 'https://mcp.hootsuite.com/perch',
@@ -143,6 +228,7 @@ export const MCP_CATALOG: Record<string, McpCatalogEntry> = {
   },
   hootsuiteNest: {
     key: 'hootsuiteNest',
+    hidden: true,
     label: 'Hootsuite Nest',
     // Social inbox & customer care. Hootsuite's third server (Lumen) is
     // deliberately omitted: it is hosted on app.talkwalker.com and needs a

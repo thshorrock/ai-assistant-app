@@ -168,7 +168,7 @@ export const ConnectorsSection: FC = () => {
       )}
 
       <ConnectorBrowser
-        catalogEntries={Object.values(MCP_CATALOG)}
+        catalogEntries={Object.values(MCP_CATALOG).filter((e) => !e.hidden)}
         adminConnectors={adminConnectors}
         connectedKeys={connectedKeys}
         configuringKey={configuringKey}

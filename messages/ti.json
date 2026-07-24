@@ -3261,6 +3261,18 @@
       "hootsuiteNest": {
         "name": "Hootsuite Nest",
         "description": "ናይ ማህበራዊ ሚዲያ መደብ ገጽታት ኣቕርብን ምላሽ ልእኽ።"
+      },
+      "msfDemo": {
+        "name": "MSF Demo (MCP)",
+        "description": "Demo MCP server for the MSF PoC — ping, whoami and echo tools. Secured with Entra ID."
+      },
+      "msfDemoApp": {
+        "name": "MSF Demo App (MCP-UI)",
+        "description": "Demo MCP server returning interactive MCP-UI cards rendered in chat. Secured with Entra ID."
+      },
+      "msfUnifield": {
+        "name": "MSF Unifield (MCP)",
+        "description": "Browse the Unifield product catalogue — live supply-chain data read through Unifield's Entra-protected API."
       }
     },
     "connect": "ርከብ",
@@ -3333,7 +3345,8 @@
     "add": "ኣኣጽእ",
     "filterLabel": "ተዘራቢታት ፍልስል",
     "filterPlaceholder": "ተዘራቢታት ድለ",
-    "noMatches": "ተዘራቢታት ን “{query}” ኣይመሳሰሉን።"
+    "noMatches": "ተዘራቢታት ን “{query}” ኣይመሳሰሉን።",
+    "oauthPopupBlocked": "Your browser blocked the sign-in popup. Allow popups for this site and try again."
   },
   "modelSources": {
     "connectButtonShort": "ሞዴል ምንጪ ምትሕናው",

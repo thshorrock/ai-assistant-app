@@ -3261,6 +3261,18 @@
       "hootsuiteNest": {
         "name": "Hootsuite Nest",
         "description": "Муколамаҳои паёмдони иҷтимоиро баррасӣ ва ҷавоб диҳед."
+      },
+      "msfDemo": {
+        "name": "MSF Demo (MCP)",
+        "description": "Demo MCP server for the MSF PoC — ping, whoami and echo tools. Secured with Entra ID."
+      },
+      "msfDemoApp": {
+        "name": "MSF Demo App (MCP-UI)",
+        "description": "Demo MCP server returning interactive MCP-UI cards rendered in chat. Secured with Entra ID."
+      },
+      "msfUnifield": {
+        "name": "MSF Unifield (MCP)",
+        "description": "Browse the Unifield product catalogue — live supply-chain data read through Unifield's Entra-protected API."
       }
     },
     "connect": "Пайваст кардан",
@@ -3333,7 +3345,8 @@
     "add": "Илова кардан",
     "filterLabel": "Филтри пайвасткунакҳо",
     "filterPlaceholder": "Ҷустуҷӯи пайвасткунакҳо",
-    "noMatches": "Ҳеҷ пайвасткунанда бо “{query}” мувофиқат намекунад."
+    "noMatches": "Ҳеҷ пайвасткунанда бо “{query}” мувофиқат намекунад.",
+    "oauthPopupBlocked": "Your browser blocked the sign-in popup. Allow popups for this site and try again."
   },
   "modelSources": {
     "connectButtonShort": "Пайваст кардани манбаи модел",

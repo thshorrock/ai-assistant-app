@@ -3277,6 +3277,18 @@
       "hootsuiteNest": {
         "name": "Hootsuite Nest",
         "description": "Tinjau dan tanggapi percakapan di inbox media sosial."
+      },
+      "msfDemo": {
+        "name": "MSF Demo (MCP)",
+        "description": "Demo MCP server for the MSF PoC — ping, whoami and echo tools. Secured with Entra ID."
+      },
+      "msfDemoApp": {
+        "name": "MSF Demo App (MCP-UI)",
+        "description": "Demo MCP server returning interactive MCP-UI cards rendered in chat. Secured with Entra ID."
+      },
+      "msfUnifield": {
+        "name": "MSF Unifield (MCP)",
+        "description": "Browse the Unifield product catalogue — live supply-chain data read through Unifield's Entra-protected API."
       }
     },
     "connect": "Hubungkan",
@@ -3349,7 +3361,8 @@
     "add": "Tambah",
     "filterLabel": "Filter konektor",
     "filterPlaceholder": "Cari konektor",
-    "noMatches": "Tidak ada konektor yang cocok dengan “{query}”."
+    "noMatches": "Tidak ada konektor yang cocok dengan “{query}”.",
+    "oauthPopupBlocked": "Your browser blocked the sign-in popup. Allow popups for this site and try again."
   },
   "modelSources": {
     "connectButtonShort": "Hubungkan sumber model",

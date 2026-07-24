@@ -3308,6 +3308,18 @@
       "hootsuiteNest": {
         "name": "Hootsuite Nest",
         "description": "查看并回复社交收件箱对话。"
+      },
+      "msfDemo": {
+        "name": "MSF Demo (MCP)",
+        "description": "Demo MCP server for the MSF PoC — ping, whoami and echo tools. Secured with Entra ID."
+      },
+      "msfDemoApp": {
+        "name": "MSF Demo App (MCP-UI)",
+        "description": "Demo MCP server returning interactive MCP-UI cards rendered in chat. Secured with Entra ID."
+      },
+      "msfUnifield": {
+        "name": "MSF Unifield (MCP)",
+        "description": "Browse the Unifield product catalogue — live supply-chain data read through Unifield's Entra-protected API."
       }
     },
     "connect": "连接",
@@ -3380,7 +3392,8 @@
     "add": "添加",
     "filterLabel": "筛选连接器",
     "filterPlaceholder": "搜索连接器",
-    "noMatches": "没有与“{query}”匹配的连接器。"
+    "noMatches": "没有与“{query}”匹配的连接器。",
+    "oauthPopupBlocked": "Your browser blocked the sign-in popup. Allow popups for this site and try again."
   },
   "modelSources": {
     "connectButtonShort": "连接模型来源",

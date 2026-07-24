@@ -3277,6 +3277,18 @@
       "hootsuiteNest": {
         "name": "Hootsuite Nest",
         "description": "సోషల్ ఇన్బాక్స్ సంభాషణలను సమీక్షించి, స్పందించండి."
+      },
+      "msfDemo": {
+        "name": "MSF Demo (MCP)",
+        "description": "Demo MCP server for the MSF PoC — ping, whoami and echo tools. Secured with Entra ID."
+      },
+      "msfDemoApp": {
+        "name": "MSF Demo App (MCP-UI)",
+        "description": "Demo MCP server returning interactive MCP-UI cards rendered in chat. Secured with Entra ID."
+      },
+      "msfUnifield": {
+        "name": "MSF Unifield (MCP)",
+        "description": "Browse the Unifield product catalogue — live supply-chain data read through Unifield's Entra-protected API."
       }
     },
     "connect": "కనెక్ట్ చేయండి",
@@ -3349,7 +3361,8 @@
     "add": "జోడించు",
     "filterLabel": "కనెక్టర్లను ఫిల్టర్ చేయండి",
     "filterPlaceholder": "కనెక్టర్లను వెతకండి",
-    "noMatches": "“{query}”కి సరిపడిన కనెక్టర్లు లేవు."
+    "noMatches": "“{query}”కి సరిపడిన కనెక్టర్లు లేవు.",
+    "oauthPopupBlocked": "Your browser blocked the sign-in popup. Allow popups for this site and try again."
   },
   "modelSources": {
     "connectButtonShort": "మోడల్ సోర్స్ కనెక్ట్ చేయండి",

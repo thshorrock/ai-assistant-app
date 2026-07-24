@@ -3261,6 +3261,18 @@
       "hootsuiteNest": {
         "name": "Hootsuite Nest",
         "description": "Duba da amsa hira a akwatin saƙon zamantakewa."
+      },
+      "msfDemo": {
+        "name": "MSF Demo (MCP)",
+        "description": "Demo MCP server for the MSF PoC — ping, whoami and echo tools. Secured with Entra ID."
+      },
+      "msfDemoApp": {
+        "name": "MSF Demo App (MCP-UI)",
+        "description": "Demo MCP server returning interactive MCP-UI cards rendered in chat. Secured with Entra ID."
+      },
+      "msfUnifield": {
+        "name": "MSF Unifield (MCP)",
+        "description": "Browse the Unifield product catalogue — live supply-chain data read through Unifield's Entra-protected API."
       }
     },
     "connect": "Haɗa",
@@ -3333,7 +3345,8 @@
     "add": "Ƙara",
     "filterLabel": "Tace haɗayen",
     "filterPlaceholder": "Bincika haɗayen",
-    "noMatches": "Babu haɗa da ya dace da “{query}”."
+    "noMatches": "Babu haɗa da ya dace da “{query}”.",
+    "oauthPopupBlocked": "Your browser blocked the sign-in popup. Allow popups for this site and try again."
   },
   "modelSources": {
     "connectButtonShort": "Haɗa tushe na samfurin",
