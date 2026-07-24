@@ -145,13 +145,15 @@ export const AdminConnectorRow: FC<AdminConnectorRowProps> = ({
       setError(
         kind === 'oauth_denied'
           ? t('oauthDenied')
-          : kind === 'oauth_timeout'
-            ? t('oauthTimeout')
-            : kind === 'oauth_cancelled'
-              ? t('oauthCancelled')
-              : kind === 'oauth_unavailable'
-                ? t('oauthUnavailable')
-                : t('oauthFailed'),
+          : kind === 'oauth_popup_blocked'
+            ? t('oauthPopupBlocked')
+            : kind === 'oauth_timeout'
+              ? t('oauthTimeout')
+              : kind === 'oauth_cancelled'
+                ? t('oauthCancelled')
+                : kind === 'oauth_unavailable'
+                  ? t('oauthUnavailable')
+                  : t('oauthFailed'),
       );
     } finally {
       setIsBusy(false);

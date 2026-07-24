@@ -173,7 +173,13 @@ export function guardedFetch(baseFetch: FetchLike = fetch): FetchLike {
       throw new Error('Blocked non-public request URL');
     }
     await assertPublicHost(target);
-    return baseFetch(input, { ...init, redirect: 'error' });
+    // no-store: keeps these off Next's fetch cache. NOTE this does NOT make
+    // the response safe to cancel(): inside a Next route handler
+    // `response.body.cancel()` never resolves regardless of cache mode
+    // (measured — see mcpOauthDiscovery.ts discoveryFetch). Callers that
+    // cancel bodies must buffer, as discovery does; transports stream and
+    // consume their bodies, so they are unaffected.
+    return baseFetch(input, { ...init, redirect: 'error', cache: 'no-store' });
   };
 }
 

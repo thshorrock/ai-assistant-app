@@ -164,6 +164,19 @@ export async function connectMcpOauth(
     'popup,width=600,height=750',
   );
 
+  // window.open returns null when the browser blocks the popup. Without this
+  // check the flow waits the full FLOW_TIMEOUT_MS for a BroadcastChannel
+  // message that can never arrive (the `popup.closed` poll is also skipped,
+  // because it is guarded by `popup &&`) — the UI sits on "Waiting for
+  // authorization…" for five minutes and nothing is logged anywhere.
+  //
+  // Blocking is easy to trigger here: window.open runs AFTER awaiting OAuth
+  // discovery, so a slow discovery can outlive the browser's transient user
+  // activation even though the user did click Connect.
+  if (!popup) {
+    throw new Error('oauth_popup_blocked');
+  }
+
   const message = await new Promise<CallbackMessage>((resolve, reject) => {
     const channel = new BroadcastChannel(CHANNEL_NAME);
     const cleanup = () => {

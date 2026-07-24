@@ -20,6 +20,21 @@ export interface McpToolCallResult {
   /** Flattened text content of the tool result. */
   text: string;
   isError: boolean;
+  /**
+   * MCP-UI resources (ui:// embedded resources, https://mcpui.dev) found in
+   * the result content, size-capped. Carried alongside the flattened text so
+   * the chat UI can render them interactively; absent when the tool returned
+   * none.
+   */
+  uiResources?: McpUiResource[];
+}
+
+/** Wire-shape of one MCP-UI embedded resource (mirrors UiResourceRef). */
+export interface McpUiResource {
+  uri: string;
+  mimeType: string;
+  text?: string;
+  blob?: string;
 }
 
 export interface McpConnection {
@@ -75,6 +90,44 @@ function contentToText(content: unknown): string {
     })
     .filter(Boolean)
     .join('\n');
+}
+
+// UI resources ride the tool-call record marker and are persisted with the
+// conversation, so cap them: enough for a real embedded app, small enough
+// that a hostile/buggy server can't balloon the transcript.
+const MAX_UI_RESOURCES_PER_CALL = 4;
+const MAX_UI_RESOURCE_CHARS = 150_000;
+
+/**
+ * Picks out MCP-UI embedded resources (type 'resource', uri ui://…) from a
+ * tool result's content array. Oversized or malformed blocks are dropped
+ * silently — the flattened text (with its `[resource content]` placeholder)
+ * remains the source of truth for the model either way.
+ */
+function extractUiResources(content: unknown): McpUiResource[] | undefined {
+  if (!Array.isArray(content)) return undefined;
+  const out: McpUiResource[] = [];
+  for (const block of content) {
+    if (out.length >= MAX_UI_RESOURCES_PER_CALL) break;
+    if (!block || typeof block !== 'object') continue;
+    const b = block as Record<string, unknown>;
+    if (b.type !== 'resource' || !b.resource || typeof b.resource !== 'object')
+      continue;
+    const r = b.resource as Record<string, unknown>;
+    if (typeof r.uri !== 'string' || !r.uri.startsWith('ui://')) continue;
+    if (typeof r.mimeType !== 'string') continue;
+    const text = typeof r.text === 'string' ? r.text : undefined;
+    const blob = typeof r.blob === 'string' ? r.blob : undefined;
+    const payload = text ?? blob;
+    if (payload === undefined || payload.length > MAX_UI_RESOURCE_CHARS)
+      continue;
+    out.push({
+      uri: r.uri,
+      mimeType: r.mimeType,
+      ...(text !== undefined ? { text } : { blob }),
+    });
+  }
+  return out.length > 0 ? out : undefined;
 }
 
 /**
@@ -191,9 +244,11 @@ function wrapClient(client: {
         undefined,
         { timeout: timeoutMs },
       )) as Record<string, unknown>;
+      const uiResources = extractUiResources(result.content);
       return {
         text: contentToText(result.content),
         isError: result.isError === true,
+        ...(uiResources ? { uiResources } : {}),
       };
     },
 

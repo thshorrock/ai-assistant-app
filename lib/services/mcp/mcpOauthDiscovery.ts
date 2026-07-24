@@ -86,6 +86,46 @@ const cache = new Map<
 >();
 const CACHE_TTL_MS = 5 * 60 * 1000;
 
+// Statuses for which the Response constructor forbids a non-null body.
+const NULL_BODY_STATUSES = new Set([101, 204, 205, 304]);
+
+/**
+ * Fetch handed to the SDK for discovery requests. Two constraints, both
+ * established empirically (see deploy-ai-assistant/mcp-connector-debugging.md):
+ *
+ * 1. The SDK must NEVER see a live response stream from Next's patched
+ *    global fetch. Discovery walks up to five candidate URLs and awaits
+ *    `response.body.cancel()` on every non-OK candidate — and inside a
+ *    Next dev route handler that cancel() does not resolve (measured
+ *    pending at 10 s on both a 200 and a 404; the full flow stalled
+ *    4–21 min until something, likely GC, released it). Buffering the body
+ *    and returning a fresh in-memory Response makes cancel() trivial and
+ *    returns the connection to the pool immediately. Metadata documents
+ *    are small, so buffering costs nothing.
+ * 2. `cache: 'no-store'` keeps discovery off Next's fetch cache — discovery
+ *    must never be cached anyway — but it does NOT prevent the hang on its
+ *    own; only buffering does.
+ */
+function discoveryFetch(trusted: boolean): typeof fetch {
+  return (async (input: string | URL, init?: RequestInit) => {
+    const response = trusted
+      ? await fetch(input, { ...init, cache: 'no-store' })
+      : await guardedFetch()(input, init);
+    const body = NULL_BODY_STATUSES.has(response.status)
+      ? null
+      : await response.arrayBuffer();
+    const buffered = new Response(body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers,
+    });
+    // Response.url is read-only and not constructor-settable; mirror it the
+    // way Next's own clone-response does.
+    Object.defineProperty(buffered, 'url', { value: response.url });
+    return buffered;
+  }) as typeof fetch;
+}
+
 async function validateDiscoveredEndpoint(
   label: string,
   url: string | undefined,
@@ -189,8 +229,9 @@ export async function resolveOauthContext(
 
   let info;
   try {
+    // NEVER leave fetchFn undefined — see discoveryFetch above.
     info = await discoverOAuthServerInfo(resolved.url, {
-      fetchFn: resolved.trusted ? undefined : guardedFetch(),
+      fetchFn: discoveryFetch(resolved.trusted),
     });
   } catch {
     throw new McpOauthError(
@@ -254,6 +295,20 @@ export function getStaticOauthClient(
     string,
     { clientId?: string; clientSecret?: string }
   > = {
+    msfDemo: {
+      clientId: env.MCP_OAUTH_MSFDEMO_CLIENT_ID,
+      clientSecret: env.MCP_OAUTH_MSFDEMO_CLIENT_SECRET,
+    },
+    // Same MCP server + Entra registration as msfDemo, different slug.
+    msfDemoApp: {
+      clientId: env.MCP_OAUTH_MSFDEMO_CLIENT_ID,
+      clientSecret: env.MCP_OAUTH_MSFDEMO_CLIENT_SECRET,
+    },
+    // Same again — the /unifield slug on the same MCP server.
+    msfUnifield: {
+      clientId: env.MCP_OAUTH_MSFDEMO_CLIENT_ID,
+      clientSecret: env.MCP_OAUTH_MSFDEMO_CLIENT_SECRET,
+    },
     github: {
       clientId: env.MCP_OAUTH_GITHUB_CLIENT_ID,
       clientSecret: env.MCP_OAUTH_GITHUB_CLIENT_SECRET,
