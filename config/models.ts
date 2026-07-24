@@ -131,11 +131,45 @@ export function getStaticModelList(): OpenAIModel[] {
   const applyExclusions = STATIC_EXCLUSION_RINGS.includes(
     getCurrentEnvironment(),
   );
+
+  /**
+   * Deployment allow-list (runtime, server-side).
+   *
+   * Without live discovery — which needs an AI Foundry resource — the static
+   * catalogue advertises every known model regardless of what is actually
+   * deployed in the Azure account. Selecting an undeployed one is a guaranteed
+   * 500 at chat time. AVAILABLE_MODELS pins the picker to reality.
+   *
+   * Comma-separated model ids, e.g. "gpt-5-mini,o4-mini".
+   * Unset (or empty) keeps the original full-catalogue behaviour, so this is a
+   * no-op for deployments that have discovery or a full set of models.
+   */
+  const deployedOnly = (process.env.AVAILABLE_MODELS || '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  /**
+   * When AVAILABLE_MODELS is set it is AUTHORITATIVE and replaces
+   * STATIC_LIST_EXCLUSIONS rather than combining with it.
+   *
+   * Combining them was wrong: STATIC_LIST_EXCLUSIONS only applies in
+   * beta/prod, and it happens to contain MISTRAL_LARGE_3 and DEEPSEEK_V3_2.
+   * So an allow-list that worked locally (dev => exclusions off) silently lost
+   * those two models once deployed — the picker disagreed between
+   * environments. An explicit list of deployed models is a stronger statement
+   * than the heuristic exclusion list, so it wins, and both environments now
+   * show exactly the same models.
+   */
+  const useAllowList = deployedOnly.length > 0;
+
   return Object.values(OpenAIModels).filter(
     (m) =>
       !m.isDisabled &&
       !isModelDisabled(m.id) &&
-      !(applyExclusions && STATIC_LIST_EXCLUSIONS.includes(m.id)),
+      (useAllowList
+        ? deployedOnly.includes(m.id)
+        : !(applyExclusions && STATIC_LIST_EXCLUSIONS.includes(m.id))),
   );
 }
 

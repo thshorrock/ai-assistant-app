@@ -115,6 +115,12 @@ const nextConfig = {
         source: '/(.*)',
         headers: [
           {
+            // Internal-only app: keep it out of every search index
+            // (enforced, unlike the advisory robots.txt from app/robots.ts).
+            key: 'X-Robots-Tag',
+            value: 'noindex, nofollow, noarchive, nosnippet',
+          },
+          {
             key: 'X-Frame-Options',
             value: 'DENY',
           },
