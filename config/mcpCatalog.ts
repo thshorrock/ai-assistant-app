@@ -143,6 +143,24 @@ export const MCP_CATALOG: Record<string, McpCatalogEntry> = {
     nameKey: 'connectors.catalog.msfUnifield.name',
     descriptionKey: 'connectors.catalog.msfUnifield.description',
   },
+  msfAmr: {
+    key: 'msfAmr',
+    label: 'MSF AMR stewardship (MCP)',
+    url: `${MSF_MCP_BASE}/amr`,
+    transport: 'streamable-http',
+    // Same MCP server and Entra API registration as msfDemo — /amr is another
+    // slug on the same host — so it shares the msfDemo OAuth app and scope.
+    // Its tools READ the AMR stewardship pipeline (month-end statement, case
+    // lookup by accession, cumulative antibiogram, the Path B reviewer queue,
+    // Path A's shadow escalations and the scoreboards). Read-only by design:
+    // the design forbids a retrospective instrument acquiring a path to a
+    // prescriber, and a tool an assistant can call would be exactly that.
+    auth: { style: 'oauth' },
+    supportsDynamicRegistration: false,
+    oauthScopes: MSF_MCP_SCOPES,
+    nameKey: 'connectors.catalog.msfAmr.name',
+    descriptionKey: 'connectors.catalog.msfAmr.description',
+  },
   github: {
     key: 'github',
     hidden: true,

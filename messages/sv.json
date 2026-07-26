@@ -3289,6 +3289,10 @@
       "msfUnifield": {
         "name": "MSF Unifield (MCP)",
         "description": "Browse the Unifield product catalogue — live supply-chain data read through Unifield's Entra-protected API."
+      },
+      "msfAmr": {
+        "name": "MSF AMR stewardship (MCP)",
+        "description": "Read the AMR stewardship pipeline — month-end statement, case lookup by accession, cumulative antibiogram, reviewer queue and scoreboards. Read-only. Secured with Entra ID."
       }
     },
     "connect": "Anslut",
