@@ -3293,6 +3293,14 @@
       "msfAmr": {
         "name": "MSF AMR stewardship (MCP)",
         "description": "Read the AMR stewardship pipeline — month-end statement, case lookup by accession, cumulative antibiogram, reviewer queue and scoreboards. Read-only. Secured with Entra ID."
+      },
+      "msfSharePoint": {
+        "name": "MSF SharePoint (MCP)",
+        "description": "Read SharePoint workbooks via Microsoft Graph as the signed-in user — sites, workbooks and worksheet data, enforced by SharePoint's own permissions. Secured with Entra ID."
+      },
+      "msfPowerBi": {
+        "name": "MSF Power BI (MCP)",
+        "description": "Query the Power BI semantic model with DAX as the signed-in user and render live KPI cards. Secured with Entra ID."
       }
     },
     "connect": "कनेक्ट करें",

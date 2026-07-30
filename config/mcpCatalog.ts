@@ -161,6 +161,42 @@ export const MCP_CATALOG: Record<string, McpCatalogEntry> = {
     nameKey: 'connectors.catalog.msfAmr.name',
     descriptionKey: 'connectors.catalog.msfAmr.description',
   },
+  msfSharePoint: {
+    key: 'msfSharePoint',
+    label: 'MSF SharePoint (MCP)',
+    url: `${MSF_MCP_BASE}/sharepoint`,
+    transport: 'streamable-http',
+    // Same MCP server and Entra API registration as msfDemo — /sharepoint is
+    // another slug on the same host — so it shares the msfDemo OAuth app and
+    // scope. Its tools read SharePoint workbooks through Microsoft Graph ON
+    // BEHALF OF the signed-in user (the MCP server OBO-exchanges the relayed
+    // token), so SharePoint's own per-user permissions decide what each user
+    // sees. This is our own slug rather than Microsoft's hosted MCP server
+    // because that server exposes directory-admin scopes only — no
+    // Sites/Files access (checked 2026-07-29).
+    auth: { style: 'oauth' },
+    supportsDynamicRegistration: false,
+    oauthScopes: MSF_MCP_SCOPES,
+    nameKey: 'connectors.catalog.msfSharePoint.name',
+    descriptionKey: 'connectors.catalog.msfSharePoint.description',
+  },
+  msfPowerBi: {
+    key: 'msfPowerBi',
+    label: 'MSF Power BI (MCP)',
+    url: `${MSF_MCP_BASE}/powerbi`,
+    transport: 'streamable-http',
+    // Same MCP server and Entra API registration as msfDemo — /powerbi is
+    // another slug on the same host. Its tools run DAX against the Power BI
+    // semantic model as the signed-in user (on-behalf-of) and render MCP-UI
+    // cards server-side — a live Power BI embed cannot run in the sandboxed
+    // iframe (allow-scripts, no same-origin) and the sandbox must not be
+    // loosened for it.
+    auth: { style: 'oauth' },
+    supportsDynamicRegistration: false,
+    oauthScopes: MSF_MCP_SCOPES,
+    nameKey: 'connectors.catalog.msfPowerBi.name',
+    descriptionKey: 'connectors.catalog.msfPowerBi.description',
+  },
   github: {
     key: 'github',
     hidden: true,

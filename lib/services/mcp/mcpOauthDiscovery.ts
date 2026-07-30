@@ -309,6 +309,23 @@ export function getStaticOauthClient(
       clientId: env.MCP_OAUTH_MSFDEMO_CLIENT_ID,
       clientSecret: env.MCP_OAUTH_MSFDEMO_CLIENT_SECRET,
     },
+    // Same again — /amr, /sharepoint and /powerbi slugs on the same MCP
+    // server. msfAmr was missing from this map when it was added to the
+    // catalog: without a static client its OAuth falls back to dynamic
+    // client registration, which Entra does not support, so connecting
+    // failed. Every msf* slug entry added to the catalog needs a row here.
+    msfAmr: {
+      clientId: env.MCP_OAUTH_MSFDEMO_CLIENT_ID,
+      clientSecret: env.MCP_OAUTH_MSFDEMO_CLIENT_SECRET,
+    },
+    msfSharePoint: {
+      clientId: env.MCP_OAUTH_MSFDEMO_CLIENT_ID,
+      clientSecret: env.MCP_OAUTH_MSFDEMO_CLIENT_SECRET,
+    },
+    msfPowerBi: {
+      clientId: env.MCP_OAUTH_MSFDEMO_CLIENT_ID,
+      clientSecret: env.MCP_OAUTH_MSFDEMO_CLIENT_SECRET,
+    },
     github: {
       clientId: env.MCP_OAUTH_GITHUB_CLIENT_ID,
       clientSecret: env.MCP_OAUTH_GITHUB_CLIENT_SECRET,

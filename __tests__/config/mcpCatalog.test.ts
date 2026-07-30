@@ -1,3 +1,5 @@
+import { getStaticOauthClient } from '@/lib/services/mcp/mcpOauthDiscovery';
+
 import { MCP_SERVER_ID_PATTERN } from '@/types/mcp';
 
 import {
@@ -69,7 +71,14 @@ describe('MCP_CATALOG', () => {
     // MCP_MSF_BASE_URL / MCP_MSF_API_SCOPE (see vitest.setup.node.ts for the
     // test values) so this public repo carries neither. Guards against a
     // literal creeping back in.
-    for (const key of ['msfDemo', 'msfDemoApp', 'msfUnifield']) {
+    for (const key of [
+      'msfDemo',
+      'msfDemoApp',
+      'msfUnifield',
+      'msfAmr',
+      'msfSharePoint',
+      'msfPowerBi',
+    ]) {
       const entry = MCP_CATALOG[key];
       expect(entry.url.startsWith(process.env.MCP_MSF_BASE_URL!)).toBe(true);
       expect(entry.oauthScopes).toEqual([process.env.MCP_MSF_API_SCOPE]);
@@ -86,7 +95,30 @@ describe('MCP_CATALOG', () => {
       .filter((entry) => !entry.hidden)
       .map((entry) => entry.key)
       .sort();
-    expect(visible).toEqual(['msfDemo', 'msfDemoApp', 'msfUnifield']);
+    expect(visible).toEqual([
+      'msfAmr',
+      'msfDemo',
+      'msfDemoApp',
+      'msfPowerBi',
+      'msfSharePoint',
+      'msfUnifield',
+    ]);
+  });
+
+  it('has a static OAuth client for every MSF entry', () => {
+    // Entra does not support dynamic client registration, and the discovery
+    // path falls back to DCR whenever getStaticOauthClient returns null — so
+    // an MSF catalog entry without a row there cannot be connected to at all.
+    // msfAmr shipped in exactly that state. The keys are derived from the
+    // catalog rather than listed, so a new msf* slug is covered the moment it
+    // is added instead of when someone remembers to extend this list.
+    const msfKeys = Object.keys(MCP_CATALOG).filter((key) =>
+      key.startsWith('msf'),
+    );
+    expect(msfKeys.length).toBeGreaterThan(0);
+    for (const key of msfKeys) {
+      expect(getStaticOauthClient(key)?.clientId).toBeTruthy();
+    }
   });
 
   it('has an en.json name and description for every entry', () => {

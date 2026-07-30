@@ -9,6 +9,13 @@ import { afterAll, afterEach, beforeAll, beforeEach } from 'vitest';
 process.env.MCP_MSF_BASE_URL ??= 'https://mcp.example.test';
 process.env.MCP_MSF_API_SCOPE ??=
   'api://00000000-0000-0000-0000-000000000000/Mcp.Invoke';
+// Every msf* slug shares one Entra OAuth app, so one placeholder covers them
+// all. Needed for the getStaticOauthClient coverage assertion in
+// __tests__/config/mcpCatalog.test.ts: with no value, that lookup returns null
+// for a correctly-registered entry and the test cannot tell it apart from a
+// missing one.
+process.env.MCP_OAUTH_MSFDEMO_CLIENT_ID ??=
+  '00000000-0000-0000-0000-000000000000';
 
 // Mock localStorage for Zustand persist middleware
 // Node.js environment doesn't have localStorage, but Zustand's persist middleware requires it
