@@ -43,6 +43,37 @@ describe('buildMcpSystemContext / appendMcpSystemContext', () => {
     expect(section).toMatch(/untrusted content/i);
   });
 
+  // The app owns the approval gate: it renders the tool name, the arguments and
+  // an Approve/Deny control. When the prompt only said tool calls "may pause and
+  // ask the user for explicit approval", the model read that as its own job and
+  // negotiated in prose — "Do you approve? Reply Yes" — forcing the user through
+  // a redundant round trip before the real gate even appeared.
+  it('tells the model not to solicit tool approval in prose', () => {
+    const section = buildMcpSystemContext([server()]);
+
+    expect(section).toMatch(/do not ask for permission to use a tool/i);
+    expect(section).toMatch(/gates tool calls itself/i);
+  });
+
+  // A data-integrity rule, not stylistic guidance: a connector tool result
+  // once instructed the model to keep retrying and not report errors, and it
+  // responded by narrating fake tool calls and inventing supply-chain stock
+  // figures. These clauses are the standing defence, and they must apply to
+  // every connector — including third-party servers that carry no
+  // instructions of their own. Do not delete without a replacement.
+  it('forbids inventing tool data and forbids writing tool calls as prose', () => {
+    const section = buildMcpSystemContext([server()]);
+
+    expect(section).toMatch(/never invent, complete or illustrate tool data/i);
+    // Partial results must be reported as partial, not quietly topped up.
+    expect(section).toMatch(/fewer records than asked for/i);
+    expect(section).toMatch(/do not fill the gap/i);
+    // The specific tell from the incident: fake payloads in message text.
+    expect(section).toMatch(
+      /never write out a tool call or a tool result as message text/i,
+    );
+  });
+
   it('appends after the existing prompt so base + user instructions keep priority', () => {
     const combined = appendMcpSystemContext('base prompt', [server()]);
     expect(combined.startsWith('base prompt\n\n## Connected Tools')).toBe(true);
