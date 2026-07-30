@@ -220,7 +220,17 @@ export const MarkdownTable: FC<MarkdownTableProps> = ({
       <div className="overflow-x-auto">
         <table
           ref={tableRef}
-          className={['w-full border-collapse border border-border', className]
+          // No outer border on the table element. `border border-border` came
+          // verbatim from Streamdown, which expects a shadcn `--border` token
+          // this app does not define — so `border-border` compiled to nothing
+          // and bare `border` fell back to Tailwind preflight's light grey in
+          // BOTH themes, drawing a white box in dark mode. It also read as
+          // wider than the data, because globals.css forces `display: block`
+          // on prose tables: the bordered box stretches to `w-full` while the
+          // rows size to their content. The cell borders in globals.css (which
+          // do have `.dark` overrides) already outline the grid, so the outer
+          // rectangle was redundant as well as wrong.
+          className={['w-full border-collapse', className]
             .filter(Boolean)
             .join(' ')}
           data-streamdown="table"
