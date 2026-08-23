@@ -180,6 +180,24 @@ export const MCP_CATALOG: Record<string, McpCatalogEntry> = {
     nameKey: 'connectors.catalog.msfSharePoint.name',
     descriptionKey: 'connectors.catalog.msfSharePoint.description',
   },
+  msfTranslate: {
+    key: 'msfTranslate',
+    label: 'MSF Document translation (MCP)',
+    url: `${MSF_MCP_BASE}/translate`,
+    transport: 'streamable-http',
+    // Same MCP server and Entra API registration as msfDemo — /translate is
+    // another slug on the same host. It reads a SharePoint PDF on behalf of
+    // the signed-in user, translates the WHOLE document (not a summary), and
+    // returns a new PDF from a short-lived download link on the MCP server
+    // itself — the file is never written back to SharePoint. Note that unlike
+    // the other MSF slugs, this one SENDS the document's text to Azure OpenAI;
+    // the tool descriptions say so, and so does the description below.
+    auth: { style: 'oauth' },
+    supportsDynamicRegistration: false,
+    oauthScopes: MSF_MCP_SCOPES,
+    nameKey: 'connectors.catalog.msfTranslate.name',
+    descriptionKey: 'connectors.catalog.msfTranslate.description',
+  },
   msfPowerBi: {
     key: 'msfPowerBi',
     label: 'MSF Power BI (MCP)',
@@ -196,6 +214,24 @@ export const MCP_CATALOG: Record<string, McpCatalogEntry> = {
     oauthScopes: MSF_MCP_SCOPES,
     nameKey: 'connectors.catalog.msfPowerBi.name',
     descriptionKey: 'connectors.catalog.msfPowerBi.description',
+  },
+  msfTsr: {
+    key: 'msfTsr',
+    label: 'MSF Total Stock Review (MCP)',
+    url: `${MSF_MCP_BASE}/tsr`,
+    transport: 'streamable-http',
+    // Same MCP server and Entra API registration as msfDemo — /tsr is another
+    // slug on the same host. It assists MSF OCA's monthly Total Stock Review:
+    // the manual as readable pages with a download, a walkthrough that is
+    // verified against what the caller can actually reach, where each of the
+    // four sources lives, and pipeline version comparison. It reads
+    // SharePoint, UniField and Power BI itself (on-behalf-of), so it does not
+    // require the sibling connectors to be enabled.
+    auth: { style: 'oauth' },
+    supportsDynamicRegistration: false,
+    oauthScopes: MSF_MCP_SCOPES,
+    nameKey: 'connectors.catalog.msfTsr.name',
+    descriptionKey: 'connectors.catalog.msfTsr.description',
   },
   github: {
     key: 'github',

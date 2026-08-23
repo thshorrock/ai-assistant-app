@@ -3306,6 +3306,14 @@
       "msfPowerBi": {
         "name": "MSF Power BI (MCP)",
         "description": "Query the Power BI semantic model with DAX as the signed-in user and render live KPI cards. Secured with Entra ID."
+      },
+      "msfTsr": {
+        "name": "MSF Total Stock Review (MCP)",
+        "description": "Assist the monthly Total Stock Review: read the manual as pages you can browse and download, walk through what to do at each step, find where the Green List, stock, Standard List and pipeline actually live, and compare two versions of a pipeline. Secured with Entra ID."
+      },
+      "msfTranslate": {
+        "name": "MSF Document translation (MCP)",
+        "description": "Translate a whole SharePoint PDF into another language and get a new PDF to download — the full document, not a summary. The source is read with your own SharePoint permissions and its text is sent to Azure OpenAI to translate; the result is held briefly by the server and is not saved back to SharePoint. Secured with Entra ID."
       }
     },
     "connect": "Connect",

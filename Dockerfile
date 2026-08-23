@@ -23,6 +23,16 @@ ARG BUILD
 ENV NEXT_PUBLIC_BUILD=$BUILD
 ARG ENV=prod
 ENV NEXT_PUBLIC_ENV=$ENV
+# Origins allowed to serve media (CSP `media-src`), e.g. the SharePoint host an
+# MCP-UI card streams the TSR training video from.
+#
+# A BUILD ARG, NOT A RUNTIME ENV VAR, and the distinction is invisible until it
+# bites: Next evaluates `headers()` in next.config.js during `next build` and
+# serialises the result into routes-manifest.json. Setting this on the running
+# container changes nothing — the header was already baked. That cost a full
+# deploy cycle to learn.
+ARG MEDIA_SRC_ALLOWLIST=""
+ENV MEDIA_SRC_ALLOWLIST=$MEDIA_SRC_ALLOWLIST
 
 RUN npm run build
 

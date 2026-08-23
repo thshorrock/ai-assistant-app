@@ -326,6 +326,14 @@ export function getStaticOauthClient(
       clientId: env.MCP_OAUTH_MSFDEMO_CLIENT_ID,
       clientSecret: env.MCP_OAUTH_MSFDEMO_CLIENT_SECRET,
     },
+    msfTsr: {
+      clientId: env.MCP_OAUTH_MSFDEMO_CLIENT_ID,
+      clientSecret: env.MCP_OAUTH_MSFDEMO_CLIENT_SECRET,
+    },
+    msfTranslate: {
+      clientId: env.MCP_OAUTH_MSFDEMO_CLIENT_ID,
+      clientSecret: env.MCP_OAUTH_MSFDEMO_CLIENT_SECRET,
+    },
     github: {
       clientId: env.MCP_OAUTH_GITHUB_CLIENT_ID,
       clientSecret: env.MCP_OAUTH_GITHUB_CLIENT_SECRET,

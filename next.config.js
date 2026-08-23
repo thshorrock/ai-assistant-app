@@ -153,7 +153,33 @@ const nextConfig = {
               // the risk is low, since an attacker who can already run script
               // in the page gains little from loopback reachability.
               "connect-src 'self' https://login.microsoftonline.com https://graph.microsoft.com https://*.ai.msfusa.org https://*.launchdarkly.com http://127.0.0.1:* http://localhost:*; " +
-              "media-src 'self' blob:; " +
+              // Media from an allow-listed host, for MCP-UI cards that stream a
+              // file the caller is entitled to (the TSR training video, served
+              // from SharePoint with a per-caller pre-authenticated URL).
+              //
+              // This is load-bearing and non-obvious: an iframe rendered from
+              // `srcDoc` INHERITS THIS CSP. So an MCP-UI card cannot load media
+              // the parent page may not, no matter what its sandbox allows —
+              // the video showed a 0:00 player and never loaded a frame until
+              // this line changed. CORS is not the issue: SharePoint answers
+              // an `Origin: null` range request with 206 and
+              // `access-control-allow-origin: *`.
+              //
+              // Env-driven and empty by default: this repository is a PUBLIC
+              // fork, so the deployment's hostnames live in configuration, not
+              // here — the same reason MCP_MSF_BASE_URL exists. Set
+              // MEDIA_SRC_ALLOWLIST to a space-separated list of origins.
+              //
+              // IT MUST BE SET AT BUILD TIME. Next evaluates headers() during
+              // `next build` and writes the result into routes-manifest.json,
+              // so a value supplied to the running container arrives far too
+              // late and the old header is served with no sign anything is
+              // wrong. Pass it as a Docker build arg (see the Dockerfile).
+              `media-src 'self' blob:${
+                process.env.MEDIA_SRC_ALLOWLIST
+                  ? ` ${process.env.MEDIA_SRC_ALLOWLIST}`
+                  : ''
+              }; ` +
               "worker-src 'self' blob:; " +
               "frame-src 'self'; " +
               "frame-ancestors 'none';",

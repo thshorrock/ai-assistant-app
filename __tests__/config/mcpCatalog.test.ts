@@ -78,6 +78,8 @@ describe('MCP_CATALOG', () => {
       'msfAmr',
       'msfSharePoint',
       'msfPowerBi',
+      'msfTsr',
+      'msfTranslate',
     ]) {
       const entry = MCP_CATALOG[key];
       expect(entry.url.startsWith(process.env.MCP_MSF_BASE_URL!)).toBe(true);
@@ -101,6 +103,8 @@ describe('MCP_CATALOG', () => {
       'msfDemoApp',
       'msfPowerBi',
       'msfSharePoint',
+      'msfTranslate',
+      'msfTsr',
       'msfUnifield',
     ]);
   });
