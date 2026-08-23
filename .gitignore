@@ -28,7 +28,10 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # local env files
-.env*.local
+# The trailing * matters: `.env*.local` alone does NOT match a copy such as
+# `.env.local.bak-20260822`, and a real one was sitting untracked in this
+# working tree — one `git add -A` from a PUBLIC fork.
+.env*.local*
 .env*.secret.*
 
 # vercel
