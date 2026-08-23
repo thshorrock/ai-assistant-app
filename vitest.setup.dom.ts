@@ -840,6 +840,16 @@ const mockMessages: Record<string, unknown> = {
     cancel: 'Cancel',
     apply: 'Apply',
   },
+  notifications: {
+    settingsTitle: 'Notifications',
+    settingsToggle: 'Notify me when a reply is finished',
+    settingsDescription:
+      'Shows a desktop notification when the assistant finishes replying.',
+    permissionBlocked: 'Your browser is blocking notifications for this site.',
+    unsupported: 'This browser does not support desktop notifications.',
+    replyCompleteTitle: 'Your reply is ready',
+    replyCompleteBody: 'The assistant has finished responding.',
+  },
 };
 
 /**

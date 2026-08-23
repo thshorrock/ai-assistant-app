@@ -236,6 +236,17 @@ interface SettingsStore {
   /** Default code-interpreter mode for new conversations (mirrors defaultSearchMode). */
   defaultInterpreterMode: InterpreterMode;
   autoSwitchOnFailure: boolean;
+  /**
+   * Raise a desktop notification when a reply finishes and the user is
+   * looking elsewhere. Opt-in, and off by default: the browser will not
+   * grant permission without a gesture anyway, and a notification nobody
+   * asked for is the kind of thing people disable the whole app over.
+   *
+   * Covers the assistant's TURN only. Work that outlives the turn — a
+   * /translate job runs for minutes after the reply is done — is not
+   * announced by this or by anything else.
+   */
+  notifyOnReplyComplete: boolean;
   displayNamePreference: DisplayNamePreference;
   customDisplayName: string;
   models: OpenAIModel[];
@@ -412,6 +423,7 @@ interface SettingsStore {
   setWebSearchOptions: (options: Partial<WebSearchOptions>) => void;
   setDefaultInterpreterMode: (mode: InterpreterMode) => void;
   setAutoSwitchOnFailure: (enabled: boolean) => void;
+  setNotifyOnReplyComplete: (enabled: boolean) => void;
   setDisplayNamePreference: (preference: DisplayNamePreference) => void;
   setCustomDisplayName: (name: string) => void;
   setStreamingSpeed: (config: StreamingSpeedConfig) => void;
@@ -726,6 +738,7 @@ export const useSettingsStore = create<SettingsStore>()(
       webSearchOptions: DEFAULT_WEB_SEARCH_OPTIONS,
       defaultInterpreterMode: InterpreterMode.INTELLIGENT, // Code interpreter on by default (auto-routed)
       autoSwitchOnFailure: false,
+      notifyOnReplyComplete: false,
       displayNamePreference: DEFAULT_DISPLAY_NAME_PREFERENCE,
       customDisplayName: DEFAULT_CUSTOM_DISPLAY_NAME,
       models: [],
@@ -836,6 +849,9 @@ export const useSettingsStore = create<SettingsStore>()(
 
       setAutoSwitchOnFailure: (enabled) =>
         set({ autoSwitchOnFailure: enabled }),
+
+      setNotifyOnReplyComplete: (enabled) =>
+        set({ notifyOnReplyComplete: enabled }),
 
       setDisplayNamePreference: (preference) =>
         set({ displayNamePreference: preference }),
@@ -1600,6 +1616,7 @@ export const useSettingsStore = create<SettingsStore>()(
         webSearchOptions: state.webSearchOptions,
         defaultInterpreterMode: state.defaultInterpreterMode,
         autoSwitchOnFailure: state.autoSwitchOnFailure,
+        notifyOnReplyComplete: state.notifyOnReplyComplete,
         displayNamePreference: state.displayNamePreference,
         customDisplayName: state.customDisplayName,
         prompts: state.prompts,

@@ -3301,6 +3301,14 @@
       "msfPowerBi": {
         "name": "MSF Power BI (MCP)",
         "description": "Query the Power BI semantic model with DAX as the signed-in user and render live KPI cards. Secured with Entra ID."
+      },
+      "msfTsr": {
+        "name": "MSF Total Stock Review (MCP)",
+        "description": "Assist the monthly Total Stock Review: read the manual as pages you can browse and download, walk through what to do at each step, find where the Green List, stock, Standard List and pipeline actually live, and compare two versions of a pipeline. Secured with Entra ID."
+      },
+      "msfTranslate": {
+        "name": "MSF Document translation (MCP)",
+        "description": "Translate a whole SharePoint PDF into another language and get a new PDF to download — the full document, not a summary. The source is read with your own SharePoint permissions and its text is sent to Azure OpenAI to translate; the result is held briefly by the server and is not saved back to SharePoint. Secured with Entra ID."
       }
     },
     "connect": "Підключити",
@@ -3880,5 +3888,14 @@
     "policyBlock": "Блокувати",
     "policyGroupLabel": "Політика затвердження для {tool}",
     "listHint": "Встановіть дію, коли асистент хоче використати інструмент у кожній розмові. За замовчуванням — Запитати; Блокування має пріоритет."
+  },
+  "notifications": {
+    "settingsTitle": "Notifications",
+    "settingsToggle": "Notify me when a reply is finished",
+    "settingsDescription": "Shows a desktop notification when the assistant finishes replying and you are looking at another tab or window. Work that a connector starts and continues afterwards — translating a document, for example — is not announced: nothing reports it until you ask again.",
+    "permissionBlocked": "Your browser is blocking notifications for this site. Allow them in the browser’s site settings, then turn this on again.",
+    "replyCompleteTitle": "Your reply is ready",
+    "replyCompleteBody": "The assistant has finished responding.",
+    "unsupported": "This browser does not support desktop notifications."
   }
 }

@@ -21,6 +21,7 @@ import { Settings } from '@/types/settings';
 import { AutoFetchLinksToggle } from '../AutoFetchLinksToggle';
 import { ContextWindowSlider } from '../ContextWindowSlider';
 import { PasteAttachmentSetting } from '../PasteAttachmentSetting';
+import { ReplyNotificationSetting } from '../ReplyNotificationSetting';
 import { SuggestRevisionsSetting } from '../SuggestRevisionsSetting';
 import { SystemPrompt } from '../SystemPrompt';
 import { TTSSettingsPanel } from '../TTS/TTSSettingsPanel';
@@ -305,6 +306,12 @@ export const ChatSettingsSection: FC<ChatSettingsSectionProps> = ({
               {/* Pasted-link auto-fetch — store-driven, applies immediately. */}
               <div className="mt-4">
                 <AutoFetchLinksToggle />
+              </div>
+
+              {/* Reply-finished desktop notification — asks the browser for
+                  permission at the moment it is switched on. */}
+              <div className="mt-4">
+                <ReplyNotificationSetting />
               </div>
 
               {/* Large-paste attachment threshold — same store-driven pattern. */}

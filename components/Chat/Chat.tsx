@@ -20,6 +20,7 @@ import { useAutoFocusChatInput } from '@/client/hooks/ui/useAutoFocusChatInput';
 import { useKeyboardShortcuts } from '@/client/hooks/ui/useKeyboardShortcuts';
 import { useModalState } from '@/client/hooks/ui/useModalSync';
 import { usePasteChatInput } from '@/client/hooks/ui/usePasteChatInput';
+import { useReplyCompleteNotification } from '@/client/hooks/ui/useReplyCompleteNotification';
 import { useUI } from '@/client/hooks/ui/useUI';
 
 import { getUserDisplayName } from '@/lib/utils/app/user/displayName';
@@ -129,6 +130,11 @@ export function Chat({
     retryFailedRequest,
   } = useChat();
   const failedConversation = useChatStore((s) => s.failedConversation);
+
+  // Desktop notification when a reply finishes and the user is elsewhere.
+  // Opt-in; no-ops entirely until the setting is on and the browser has
+  // granted permission.
+  useReplyCompleteNotification(isStreaming);
 
   const stopGenerationConfirmSource = useUIStore(
     (state) => state.stopGenerationConfirmSource,

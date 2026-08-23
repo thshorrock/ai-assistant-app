@@ -3862,5 +3862,14 @@
     "truncatedNotice": "{count} field(s) dropped — the table limit is {max} columns: {names}",
     "skippedDerivedNotice": "{count} calculated column(s) not saved — formulas refer to this table's columns: {names}",
     "loadReplacesColumns": "This replaces the current columns. Existing rows keep values whose column names match."
+  },
+  "notifications": {
+    "settingsTitle": "Notifications",
+    "settingsToggle": "Notify me when a reply is finished",
+    "settingsDescription": "Shows a desktop notification when the assistant finishes replying and you are looking at another tab or window. Work that a connector starts and continues afterwards — translating a document, for example — is not announced: nothing reports it until you ask again.",
+    "permissionBlocked": "Your browser is blocking notifications for this site. Allow them in the browser’s site settings, then turn this on again.",
+    "replyCompleteTitle": "Your reply is ready",
+    "replyCompleteBody": "The assistant has finished responding.",
+    "unsupported": "This browser does not support desktop notifications."
   }
 }
