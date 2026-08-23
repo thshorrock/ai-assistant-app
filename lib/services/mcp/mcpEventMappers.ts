@@ -3,6 +3,7 @@ import { McpPendingToolCall } from '@/types/mcp';
 import { AssembledToolCall } from './openaiToolCallAccumulator';
 
 import {
+  type GeneratedFileRef,
   type UiResourceRef,
   emitConsentOutcome,
   emitConsentRequest,
@@ -47,6 +48,12 @@ export function toolResultToRecordMarker(
     | { text: string; isError: boolean; uiResources?: UiResourceRef[] }
     | { errorMessage: string; errorKind?: 'auth' },
   durationMs: number,
+  /**
+   * Files the tool returned, already persisted to the caller's own blob
+   * storage. Attached even when `isError` is set: a tool may return a partial
+   * artifact alongside an error flag, exactly as MCP-UI resources may.
+   */
+  generatedFiles?: GeneratedFileRef[],
 ): string {
   const failed = 'errorMessage' in result || result.isError;
   return emitToolCallRecord({
@@ -66,6 +73,7 @@ export function toolResultToRecordMarker(
     ...(!('errorMessage' in result) && result.uiResources?.length
       ? { ui_resources: result.uiResources }
       : {}),
+    ...(generatedFiles?.length ? { generated_files: generatedFiles } : {}),
     duration_ms: durationMs,
     approval_request_id: call.id,
   });

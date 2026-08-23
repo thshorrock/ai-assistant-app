@@ -3,6 +3,10 @@ import { Session } from 'next-auth';
 import { runAnthropicMcpToolLoop } from '@/lib/services/mcp/AnthropicMcpToolLoopService';
 import { planMcpSteps } from '@/lib/services/mcp/McpPlannerService';
 import { runMcpToolLoop } from '@/lib/services/mcp/McpToolLoopService';
+import {
+  type McpArtifactCandidate,
+  persistMcpArtifacts,
+} from '@/lib/services/mcp/mcpArtifacts';
 import { sanitizeMcpPlan } from '@/lib/services/mcp/mcpPlan';
 import { appendMcpSystemContext } from '@/lib/services/mcp/mcpSystemContext';
 import { getAzureMonitorLogger } from '@/lib/services/observability';
@@ -106,6 +110,13 @@ export interface StandardChatRequest {
   mcpPlan?: McpPlan;
   approvalResponses?: ApprovalResponse[];
   /**
+   * Scopes persistence of files an MCP tool returns to this user's own blob
+   * storage — the same posture as `nativeCodeInterpreter.session`, and for
+   * the same reason. Absent means a tool's files are not retained. Never log
+   * this object.
+   */
+  mcpSession?: Session;
+  /**
    * Custom-source (byom) routing. When present, the service builds a
    * per-request client set against this endpoint/credential instead of the
    * region singletons, DISABLES the DeploymentNotFound fallback chain (no
@@ -127,6 +138,21 @@ export interface StandardChatRequest {
 }
 
 /** Region-pinned clients supplied by the container (all optional — see ServiceContainer). */
+/**
+ * The artifact-persistence callback for a request, or undefined when there is
+ * no session to scope it to.
+ *
+ * Shared by both provider paths so they cannot drift: an MCP tool returning a
+ * file must behave identically whether the turn is running through OpenAI or
+ * Anthropic.
+ */
+function mcpPersist(request: { mcpSession?: Session }) {
+  const session = request.mcpSession;
+  if (!session) return undefined;
+  return (candidates: McpArtifactCandidate[]) =>
+    persistMcpArtifacts(candidates, session);
+}
+
 export interface RegionClientResolver {
   (region: UserRegion): {
     azureOpenAIClient?: AzureOpenAI;
@@ -574,6 +600,10 @@ export class StandardChatService {
         planner: mcpPlanner,
         existingPlan: mcpExistingPlan,
         userMessageText: mcpUserMessageText,
+        // Files an MCP tool returns land in the caller's own blob storage and
+        // reach the model as handles. A closure over the session, matching
+        // the native code interpreter's persistFiles.
+        persistArtifacts: mcpPersist(request),
         usage: {
           modelId: modelConfig.id,
           region: chatRegion,
@@ -946,6 +976,7 @@ export class StandardChatService {
       planner: planning?.planner,
       existingPlan: planning?.existingPlan,
       userMessageText: planning?.userMessageText,
+      persistArtifacts: mcpPersist(request),
       usage: {
         modelId: modelConfig.id,
         region: chatRegion,

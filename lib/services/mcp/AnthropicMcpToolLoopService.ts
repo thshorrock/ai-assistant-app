@@ -57,6 +57,8 @@ export interface AnthropicMcpToolLoopOptions {
   planner?: ToolLoopCoreOptions<Anthropic.MessageParam>['planner'];
   existingPlan?: McpPlan;
   userMessageText?: string;
+  /** Persist files an MCP tool returned (see ToolLoopCoreOptions). */
+  persistArtifacts?: ToolLoopCoreOptions<Anthropic.MessageParam>['persistArtifacts'];
 }
 
 function buildAnthropicStrategy(
@@ -152,5 +154,6 @@ export async function runAnthropicMcpToolLoop(
     planner: options.planner,
     existingPlan: options.existingPlan,
     userMessageText: options.userMessageText,
+    persistArtifacts: options.persistArtifacts,
   });
 }

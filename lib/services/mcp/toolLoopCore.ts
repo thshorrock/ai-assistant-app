@@ -10,6 +10,11 @@ import { Citation } from '@/types/rag';
 
 import { connectMcp, isMcpAuthError } from './McpClientService';
 import {
+  type McpArtifactCandidate,
+  type PersistedArtifacts,
+  artifactNoticeText,
+} from './mcpArtifacts';
+import {
   deniedCallToOutcomeMarker,
   pendingCallToConsentMarker,
   toolResultToRecordMarker,
@@ -145,6 +150,17 @@ export interface ToolLoopCoreOptions<TMessage> {
   existingPlan?: McpPlan;
   /** Last user message text, for the planner. */
   userMessageText?: string;
+  /**
+   * Persist files an MCP tool returned to the caller's own blob storage.
+   *
+   * A callback rather than a Session, matching the native code interpreter's
+   * `persistFiles`: the core stays free of next-auth and of blob storage, and
+   * a test can supply a double. Absent means artifacts are not retained —
+   * every caller that can persist supplies it.
+   */
+  persistArtifacts?: (
+    candidates: McpArtifactCandidate[],
+  ) => Promise<PersistedArtifacts>;
 }
 
 export async function listToolsForServers(
@@ -384,17 +400,40 @@ export async function runToolLoopCore<TMessage>(
               const connection = await connectMcp(server);
               try {
                 const result = await connection.callTool(call.toolName, args);
+
+                // Files the tool returned go to the caller's OWN blob storage
+                // and reach the model as handles. Best-effort: a storage
+                // failure must not sink a tool result that is otherwise good,
+                // and persistMcpArtifacts already reports per-file rejections
+                // rather than dropping them.
+                let persisted: PersistedArtifacts | null = null;
+                if (options.persistArtifacts && result.artifacts?.length) {
+                  try {
+                    persisted = await options.persistArtifacts(
+                      result.artifacts,
+                    );
+                  } catch (err) {
+                    console.error(
+                      '[toolLoopCore] Failed to persist tool artifacts:',
+                      err,
+                    );
+                  }
+                }
+
                 write(
                   toolResultToRecordMarker(
                     call,
                     server.label,
                     result,
                     Date.now() - startedAt,
+                    persisted?.files,
                   ),
                 );
                 let resultText = result.isError
                   ? `Tool failed: ${result.text}`
                   : result.text || '(empty result)';
+                const notice = persisted ? artifactNoticeText(persisted) : '';
+                if (notice) resultText = `${resultText}\n${notice}`;
                 // One retry per plan step: an empty/failed result earns the
                 // model a single adjusted-arguments retry nudge; the step is
                 // marked so a second emptiness moves on quietly.

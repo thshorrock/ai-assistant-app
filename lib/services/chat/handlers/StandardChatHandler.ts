@@ -399,6 +399,10 @@ export class StandardChatHandler extends BasePipelineStage {
             mcpLoopRound: context.mcpLoopRound,
             mcpPlan: context.mcpPlan,
             approvalResponses: context.approvalResponses,
+            // Scopes persistence of files an MCP tool returns to this user's
+            // own blob storage, exactly as the code interpreter's session
+            // does for generated files.
+            mcpSession: context.session,
             customSource,
             // Phase 2 native code interpreter (Responses path) — staged by
             // ToolRouterEnricher for capable models. Session rides along for

@@ -1,3 +1,7 @@
+import {
+  type McpArtifactCandidate,
+  extractArtifactCandidates,
+} from './mcpArtifacts';
 import { assertPublicHost, guardedFetch } from './mcpUrlGuard';
 import { McpToolDefinition } from './toolSchemaCache';
 
@@ -27,6 +31,16 @@ export interface McpToolCallResult {
    * none.
    */
   uiResources?: McpUiResource[];
+  /**
+   * Files the tool returned, as RAW CANDIDATES — extracted and validated for
+   * shape, not yet persisted. Persisting needs a Session for the caller's
+   * blob storage, which this transport layer deliberately does not have; the
+   * tool loop does it via its `persistArtifacts` callback.
+   *
+   * Partitioned from `uiResources` by URI scheme: a ui:// resource is a
+   * rendering channel, never a file.
+   */
+  artifacts?: McpArtifactCandidate[];
 }
 
 /** Wire-shape of one MCP-UI embedded resource (mirrors UiResourceRef). */
@@ -245,10 +259,12 @@ function wrapClient(client: {
         { timeout: timeoutMs },
       )) as Record<string, unknown>;
       const uiResources = extractUiResources(result.content);
+      const { candidates } = extractArtifactCandidates(result.content);
       return {
         text: contentToText(result.content),
         isError: result.isError === true,
         ...(uiResources ? { uiResources } : {}),
+        ...(candidates.length ? { artifacts: candidates } : {}),
       };
     },
 

@@ -59,6 +59,8 @@ export interface McpToolLoopOptions {
   planner?: ToolLoopCoreOptions<OpenAIMessage>['planner'];
   existingPlan?: McpPlan;
   userMessageText?: string;
+  /** Persist files an MCP tool returned (see ToolLoopCoreOptions). */
+  persistArtifacts?: ToolLoopCoreOptions<OpenAIMessage>['persistArtifacts'];
 }
 
 type OpenAIMessage = OpenAI.Chat.Completions.ChatCompletionMessageParam;
@@ -163,5 +165,6 @@ export async function runMcpToolLoop(
     planner: options.planner,
     existingPlan: options.existingPlan,
     userMessageText: options.userMessageText,
+    persistArtifacts: options.persistArtifacts,
   });
 }
